@@ -1,5 +1,6 @@
 package dev.dylanott.mcp.server.invoker;
 
+import dev.dylanott.mcp.db.DatabaseResourceProvider;
 import dev.dylanott.mcp.protocol.JsonRpcError;
 import dev.dylanott.mcp.server.McpException;
 import dev.dylanott.mcp.server.RegisteredResource;
@@ -9,12 +10,27 @@ import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 
 public class ResourceInvoker {
 
+    private final Optional<DatabaseResourceProvider> dbProvider;
+
+    public ResourceInvoker(Optional<DatabaseResourceProvider> dbProvider) {
+        this.dbProvider = dbProvider;
+    }
+
     public Object invoke(ResourceRegistry.Match match) {
-        return invokeMethod(match.resource(), match.matcher());
+        RegisteredResource resource = match.resource();
+        boolean hasQuery = resource.query() != null && !resource.query().isEmpty();
+        if (hasQuery) {
+            DatabaseResourceProvider provider = dbProvider.orElseThrow(() -> new McpException(
+                    JsonRpcError.INTERNAL_ERROR,
+                    "@MCPResource(query=...) requires a DataSource on the classpath"));
+            return provider.query(resource, match.matcher());
+        }
+        return invokeMethod(resource, match.matcher());
     }
 
     private Object invokeMethod(RegisteredResource resource, Matcher matcher) {

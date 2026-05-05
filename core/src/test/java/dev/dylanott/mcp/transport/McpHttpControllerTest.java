@@ -16,6 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.util.Optional;
+
 class McpHttpControllerTest {
 
     private WebTestClient client;
@@ -29,7 +31,7 @@ class McpHttpControllerTest {
                 .scan(new MathBean());
 
         McpDispatcher dispatcher = new McpDispatcher(mapper, tools, resources,
-                new ToolInvoker(mapper), new ResourceInvoker(),
+                new ToolInvoker(mapper), new ResourceInvoker(Optional.empty()),
                 "http-test", "0.0.1");
 
         client = WebTestClient.bindToController(new McpHttpController(dispatcher)).build();
