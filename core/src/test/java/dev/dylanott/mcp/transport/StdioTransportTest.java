@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,7 +31,7 @@ class StdioTransportTest {
                 .scan(new EchoBean());
 
         McpDispatcher dispatcher = new McpDispatcher(mapper, tools, resources,
-                new ToolInvoker(mapper), new ResourceInvoker(),
+                new ToolInvoker(mapper), new ResourceInvoker(Optional.empty()),
                 "stdio-test", "0.0.1");
 
         StdioTransport transport = new StdioTransport(dispatcher, mapper);

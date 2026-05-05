@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,7 +47,7 @@ class McpDispatcherTest {
 
         dispatcher = new McpDispatcher(mapper, tools, resources,
                 new ToolInvoker(mapper),
-                new ResourceInvoker(),
+                new ResourceInvoker(Optional.empty()),
                 "test-server", "0.0.1");
     }
 
