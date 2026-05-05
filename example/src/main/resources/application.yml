@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: spring-mcp-bridge-example
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:mcpbridge}
+    username: ${POSTGRES_USER:mcpbridge}
+    password: ${POSTGRES_PASSWORD:mcpbridge}
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+      continue-on-error: false
+  mcp:
+    transport: ${MCP_TRANSPORT:sse}
+    server-name: spring-mcp-bridge-example
+    server-version: 0.1.0
+    security:
+      enabled: ${MCP_SECURITY_ENABLED:true}
+      jwt:
+        secret: ${MCP_JWT_SECRET:development-secret-change-me-please-32+bytes}
+        issuer: ${MCP_JWT_ISSUER:spring-mcp-bridge-example}
+        roles-claim: roles
+
+server:
+  port: ${SERVER_PORT:8080}
+
+logging:
+  level:
+    dev.dylanott.mcp: INFO
