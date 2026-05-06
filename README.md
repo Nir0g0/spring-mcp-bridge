@@ -1,5 +1,10 @@
 # Spring MCP Bridge
 
+[![CI](https://github.com/Nir0g0/spring-mcp-bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/Nir0g0/spring-mcp-bridge/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://adoptium.net/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.5-brightgreen.svg)](https://spring.io/projects/spring-boot)
+
 A Spring Boot library that turns any Spring application into an MCP (Model Context Protocol) server. Annotate a `@Service` method with `@MCPTool` and an LLM agent can call it. Annotate it with `@MCPResource` and the result becomes an MCP resource. Stdio and HTTP/SSE transports both ship in the box. JWT auth too.
 
 I built this because most MCP server work today happens in Python. That is fine for greenfield projects, but the largest enterprise codebases (banks, automakers, telcos, hospitals) run on Java. When those teams want to expose internal tools to LLM agents, "rewrite a thin Python wrapper around our Spring services" is the wrong shape. This is the right shape: in-JVM, in-Spring, behind the same Spring Security filters everything else lives behind.
