@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-mcpbridge}
+      POSTGRES_USER: ${POSTGRES_USER:-mcpbridge}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mcpbridge}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  example:
+    build:
+      context: .
+      dockerfile: example/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: ${POSTGRES_DB:-mcpbridge}
+      POSTGRES_USER: ${POSTGRES_USER:-mcpbridge}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      MCP_TRANSPORT: ${MCP_TRANSPORT:-sse}
+      MCP_JWT_SECRET: ${MCP_JWT_SECRET:-development-secret-change-me-please-32+bytes}
+      MCP_JWT_ISSUER: ${MCP_JWT_ISSUER:-spring-mcp-bridge-example}
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
